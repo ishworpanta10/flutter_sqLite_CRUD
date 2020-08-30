@@ -11,7 +11,7 @@ class DatabaseHelper {
 
   // Making Singleton class
   DatabaseHelper._privateConstructor();
-  
+
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
   // getting instance of db from sqflite
@@ -78,4 +78,17 @@ class DatabaseHelper {
       whereArgs: [id],
     );
   }
+
+  // filter by author
+  Future<List<Quote>> filterbyAuthorAll(String author) async {
+    Database db = await instance.database;
+    List<Map> quote = await db.query(
+      Quote.tableName,
+      where: '${Quote.columnAuthor} = ?',
+      whereArgs: [author],
+    );
+    return quote.length == 0 ? [] : quote.map((e) => Quote.fromMap(e)).toList();
+  }
+
+  //filter by isFav
 }

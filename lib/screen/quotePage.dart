@@ -28,6 +28,7 @@ class _MyHomePageState extends State<MyHomePage> {
         await _dbHelper.update(_quote);
       }
       _resetForm();
+      _refreshQuotesList();
     }
   }
 
@@ -65,6 +66,13 @@ class _MyHomePageState extends State<MyHomePage> {
 
   _refreshQuotesList() async {
     List<Quote> quotes = await _dbHelper.queryAll();
+    setState(() {
+      _quotes = quotes;
+    });
+  }
+
+  _searchStringByAuthor(String authorname) async {
+    List<Quote> quotes = await _dbHelper.filterbyAuthorAll(authorname);
     setState(() {
       _quotes = quotes;
     });
@@ -127,6 +135,17 @@ class _MyHomePageState extends State<MyHomePage> {
                 child: RaisedButton(
                   onPressed: () => _onSubmit(),
                   child: Text('Submit'),
+                  color: Colors.blueGrey,
+                  textColor: Colors.white,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.all(10.0),
+                child: RaisedButton(
+                  onPressed: () {
+                    _searchStringByAuthor('ram');
+                  },
+                  child: Text('Search by Author Ram'),
                   color: Colors.blueGrey,
                   textColor: Colors.white,
                 ),
