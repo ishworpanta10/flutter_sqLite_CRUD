@@ -40,7 +40,8 @@ class DatabaseHelper {
       CREATE TABLE ${Quote.tableName}(
       ${Quote.columnId} INTEGER PRIMARY KEY,
       ${Quote.columnQuote} TEXT NOT NULL,
-      ${Quote.columnAuthor} TEXT NOT NULL )
+      ${Quote.columnAuthor} TEXT NOT NULL,
+      ${Quote.columnisFav} INTEGER NOT NULL )
       
        ''');
   }
@@ -91,4 +92,13 @@ class DatabaseHelper {
   }
 
   //filter by isFav
+  Future<List<Quote>> filterbyFav(int isFav) async {
+    Database db = await instance.database;
+    List<Map> quote = await db.query(
+      Quote.tableName,
+      where: '${Quote.columnisFav} = ?',
+      whereArgs: [isFav],
+    );
+    return quote.length == 0 ? [] : quote.map((e) => Quote.fromMap(e)).toList();
+  }
 }

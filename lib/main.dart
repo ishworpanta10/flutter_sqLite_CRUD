@@ -44,7 +44,10 @@ class HomePage extends StatelessWidget {
             RaisedButton(
               onPressed: () async {
                 int id = await DatabaseHelper.instance.insert(
-                  Quote(author: "Rambijaya", quote: "I am ram "),
+                  Quote(
+                      author: "Rambijaya flse",
+                      quote: "I am ram fuck u",
+                      isFav: false),
                 );
 
                 print('Inserted data is : $id');
@@ -58,8 +61,11 @@ class HomePage extends StatelessWidget {
               onPressed: () async {
                 List<Quote> quoteList =
                     await DatabaseHelper.instance.queryAll();
-                print("Stored data is ${quoteList[2].quote}");
-                print("Stored data is ${quoteList.length}");
+                print(
+                    "Stored data is ${quoteList[quoteList.length - 1].quote}");
+                print(
+                    "Stored data bool ${quoteList[quoteList.length - 1].isFav}");
+                print("Stored data length ${quoteList.length}");
               },
               child: Text('Read'),
               color: Colors.greenAccent,
@@ -92,12 +98,13 @@ class HomePage extends StatelessWidget {
             ),
             //query
             RaisedButton(
-                onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => MyHomePage()));
-                },
-                child: Text('Quote Page'),
-                color: Colors.grey),
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => MyHomePage()));
+              },
+              child: Text('Quote Page'),
+              color: Colors.grey,
+            ),
           ],
         ),
       ),

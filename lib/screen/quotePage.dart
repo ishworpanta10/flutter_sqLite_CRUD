@@ -78,6 +78,14 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  _searchByisFav(int bit) async {
+    List<Quote> quotes = await _dbHelper.filterbyFav(bit);
+    setState(() {
+      _quotes = quotes;
+      print("Favquotes: $quotes");
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -115,9 +123,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 decoration: InputDecoration(labelText: 'Quote Here'),
                 validator: (val) =>
                     (val.length == 0 ? 'This field is mandatory' : null),
-                onSaved: (val) => setState(
-                  () => _quote.quote = val,
-                ),
+                onSaved: (val) {
+                  setState(() {
+                    _quote.quote = val;
+                    _quote.isFav = true;
+                  });
+                },
                 // autovalidate: true,
               ),
               TextFormField(
@@ -146,6 +157,28 @@ class _MyHomePageState extends State<MyHomePage> {
                     _searchStringByAuthor('ram');
                   },
                   child: Text('Search by Author Ram'),
+                  color: Colors.blueGrey,
+                  textColor: Colors.white,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.all(10.0),
+                child: RaisedButton(
+                  onPressed: () {
+                    _searchByisFav(1);
+                  },
+                  child: Text('Search by isfav'),
+                  color: Colors.blueGrey,
+                  textColor: Colors.white,
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.all(10.0),
+                child: RaisedButton(
+                  onPressed: () {
+                    _searchByisFav(0);
+                  },
+                  child: Text('Search by isNofav'),
                   color: Colors.blueGrey,
                   textColor: Colors.white,
                 ),
