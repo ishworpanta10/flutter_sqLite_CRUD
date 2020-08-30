@@ -11,6 +11,7 @@ class DatabaseHelper {
 
   // Making Singleton class
   DatabaseHelper._privateConstructor();
+  
   static final DatabaseHelper instance = DatabaseHelper._privateConstructor();
 
   // getting instance of db from sqflite
