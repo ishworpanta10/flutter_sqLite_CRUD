@@ -28,8 +28,8 @@ class MyApp extends StatelessWidget {
 class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    // Random random = Random();
-    // int _randomnumber = random.nextInt(20);
+    Random random = Random();
+    int _randomnumber = random.nextInt(20);
 
     return Scaffold(
       appBar: AppBar(
@@ -45,9 +45,11 @@ class HomePage extends StatelessWidget {
               onPressed: () async {
                 int id = await DatabaseHelper.instance.insert(
                   Quote(
-                      author: "Rambijaya flse",
-                      quote: "I am ram fuck u",
-                      isFav: false),
+                    author: "Author $_randomnumber",
+                    quote:
+                        "This is demo quotes with isFav false $_randomnumber",
+                    isFav: false,
+                  ),
                 );
 
                 print('Inserted data is : $id');
@@ -76,7 +78,11 @@ class HomePage extends StatelessWidget {
             RaisedButton(
               onPressed: () async {
                 int updatedId = await DatabaseHelper.instance.update(
-                  Quote(id: 1, author: "Messi", quote: "Messi is leaving"),
+                  Quote(
+                      id: 1,
+                      author: "Messi",
+                      quote: "Messi is leaving",
+                      isFav: true),
                 );
                 print('updatedId : $updatedId');
               },

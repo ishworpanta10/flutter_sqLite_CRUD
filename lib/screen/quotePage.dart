@@ -86,6 +86,21 @@ class _MyHomePageState extends State<MyHomePage> {
     });
   }
 
+  _handleFavUnfav(int index) {
+    var quote = _quotes[index];
+    quote.isFav
+        ? _dbHelper.delete(quote.id)
+        : _dbHelper.update(
+            Quote(
+              id: quote.id,
+              author: quote.author,
+              quote: quote.quote,
+              isFav: true,
+            ),
+          );
+    _refreshQuotesList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -206,14 +221,23 @@ class _MyHomePageState extends State<MyHomePage> {
                       title: Text(
                         _quotes[index].quote.toUpperCase(),
                         style: TextStyle(
-                            color: Colors.blueGrey,
-                            fontWeight: FontWeight.bold),
+                          color: Colors.blueGrey,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       subtitle: Text(_quotes[index].author),
                       trailing: IconButton(
-                          icon: Icon(Icons.delete_sweep),
+                          icon: _quotes[index].isFav
+                              ? Icon(
+                                  Icons.favorite,
+                                  color: Colors.redAccent,
+                                )
+                              : Icon(
+                                  Icons.favorite_border,
+                                  color: Colors.redAccent,
+                                ),
                           onPressed: () {
-                            _deleteQuote(_quotes[index].id);
+                            _handleFavUnfav(index);
                           }),
                       onTap: () {
                         _showForEdit(index);
