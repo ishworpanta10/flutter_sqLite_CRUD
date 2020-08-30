@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:flutterdbDemo/Model/quote.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
@@ -7,12 +8,6 @@ class DatabaseHelper {
   // commnly used variables
   static final _dbName = 'favDatabase.db';
   static final _dbVersion = 1;
-  static final _tableName = 'myfavTable';
-
-  // for table column
-  static final columnId = '_id';
-  static final columnQuote = 'quote';
-  static final columnAuthor = 'author';
 
   // Making Singleton class
   DatabaseHelper._privateConstructor();
@@ -21,6 +16,7 @@ class DatabaseHelper {
   // getting instance of db from sqflite
   static Database _database;
 
+// getter for db
   Future<Database> get database async {
     if (_database != null) {
       return _database;
@@ -30,48 +26,54 @@ class DatabaseHelper {
     return _database;
   }
 
+  // initiate db for for time that app run
   _initiateDatabase() async {
     Directory directory = await getApplicationDocumentsDirectory();
-    String path = join(directory.path, _dbName);
-    return await openDatabase(path, version: _dbVersion, onCreate: _onCreate);
+    String dbpath = join(directory.path, _dbName);
+    return await openDatabase(dbpath, version: _dbVersion, onCreate: _onCreate);
   }
 
   Future _onCreate(Database db, int version) {
+    // creating table
     db.execute(''' 
-      CREATE TABLE $_tableName(
-      $columnId INTEGER PRIMARY KEY,
-      $columnQuote TEXT NOT NULL,
-      $columnAuthor TEXT NOT NULL )
+      CREATE TABLE ${Quote.tableName}(
+      ${Quote.columnId} INTEGER PRIMARY KEY,
+      ${Quote.columnQuote} TEXT NOT NULL,
+      ${Quote.columnAuthor} TEXT NOT NULL )
       
        ''');
   }
 
-  Future<int> insert(Map<String, dynamic> row) async {
+  // insert
+  Future<int> insert(Quote quote) async {
     Database db = await instance.database;
-    return await db.insert(_tableName, row);
+    return await db.insert(Quote.tableName, quote.toMap());
   }
 
-  Future<List<Map<String, dynamic>>> queryAll() async {
+  // Read
+  Future<List<Quote>> queryAll() async {
     Database db = await instance.database;
-    return await db.query(_tableName);
+    List<Map> quote = await db.query(Quote.tableName);
+    return quote.length == 0 ? [] : quote.map((e) => Quote.fromMap(e)).toList();
   }
 
-  Future<int> update(Map<String, dynamic> row) async {
+  // update
+  Future<int> update(Quote quote) async {
     Database db = await instance.database;
-    int id = row[columnId];
     return await db.update(
-      _tableName,
-      row,
-      where: '$columnId = ?',
-      whereArgs: [id],
+      Quote.tableName,
+      quote.toMap(),
+      where: '${Quote.columnId} = ?',
+      whereArgs: [quote.id],
     );
   }
 
+  // Delete
   Future<int> delete(int id) async {
     Database db = await instance.database;
     return await db.delete(
-      _tableName,
-      where: '$columnId = ?',
+      Quote.tableName,
+      where: '${Quote.columnId} = ?',
       whereArgs: [id],
     );
   }

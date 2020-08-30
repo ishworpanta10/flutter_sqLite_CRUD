@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutterdbDemo/Model/quote.dart';
 import 'package:flutterdbDemo/dbHelper/dbHelper.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -53,10 +54,9 @@ class HomePage extends StatelessWidget {
 
             RaisedButton(
               onPressed: () async {
-                int id = await DatabaseHelper.instance.insert({
-                  DatabaseHelper.columnQuote: "This is quote $_randomnumber",
-                  DatabaseHelper.columnAuthor: 'Author name'
-                });
+                int id = await DatabaseHelper.instance.insert(
+                  Quote(author: "Rambijaya", quote: "I am ram "),
+                );
 
                 print('Inserted data is : $id');
               },
@@ -67,9 +67,10 @@ class HomePage extends StatelessWidget {
             // Read
             RaisedButton(
               onPressed: () async {
-                List<Map<String, dynamic>> queryRows =
+                List<Quote> quoteList =
                     await DatabaseHelper.instance.queryAll();
-                print("Stored data is $queryRows");
+                print("Stored data is ${quoteList[2].quote}");
+                print("Stored data is ${quoteList.length}");
               },
               child: Text('Read'),
               color: Colors.greenAccent,
@@ -79,11 +80,10 @@ class HomePage extends StatelessWidget {
 
             RaisedButton(
               onPressed: () async {
-                int updatedId = await DatabaseHelper.instance.update({
-                  DatabaseHelper.columnId: 1,
-                  DatabaseHelper.columnAuthor: 'Author changed updated',
-                });
-                print('updatedId : $updatedId`');
+                int updatedId = await DatabaseHelper.instance.update(
+                  Quote(id: 1, author: "Messi", quote: "Messi is leaving"),
+                );
+                print('updatedId : $updatedId');
               },
               child: Text('Update'),
               color: Colors.blue,
@@ -99,7 +99,11 @@ class HomePage extends StatelessWidget {
               color: Colors.red,
             ),
 
-            
+            //query
+            RaisedButton(
+                onPressed: () async {},
+                child: Text('Query'),
+                color: Colors.grey),
           ],
         ),
       ),
